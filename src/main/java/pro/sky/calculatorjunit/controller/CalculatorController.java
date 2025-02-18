@@ -1,10 +1,8 @@
 package pro.sky.calculatorjunit.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import pro.sky.calculatorjunit.service.CalculatorService;
+import org.springframework.web.bind.annotation.*;
+import pro.sky.calculatorjunit.exception.DivisionByZeroException;
+import pro.sky.calculatorjunit.CalculatorService;
 
 @RestController
 @RequestMapping(path = "/calculator")
@@ -15,8 +13,9 @@ public class CalculatorController {
         this.calculatorService = calculatorService;
     }
 
+    @GetMapping
     public String welcomeMessage() {
-        return "Добро пожаловать в калькулятор";
+        return calculatorService.calculatorGreeting();
     }
 
     @GetMapping(path = "/plus")
@@ -41,6 +40,11 @@ public class CalculatorController {
     public String calculateDivide(@RequestParam("num1") Double num1,
                                 @RequestParam("num2") Double num2) {
         return calculatorService.calculateDivide(num1, num2);
+    }
+
+    @ExceptionHandler(DivisionByZeroException.class)
+    public String handleDivisionByZero(DivisionByZeroException e) {
+        return e.getMessage();
     }
 
 }
