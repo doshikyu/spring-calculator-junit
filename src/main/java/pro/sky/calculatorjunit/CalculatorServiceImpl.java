@@ -1,6 +1,7 @@
-package pro.sky.calculatorjunit.service;
+package pro.sky.calculatorjunit;
 
 import org.springframework.stereotype.Service;
+import pro.sky.calculatorjunit.exception.DivisionByZeroException;
 
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
@@ -33,17 +34,21 @@ public class CalculatorServiceImpl implements CalculatorService {
         return calculate(num1, num2, DIVIDE);
     }
 
+    @Override
+    public String calculatorGreeting() {
+        return "Добро пожаловать в калькулятор";
+    }
+
     private void validateInputs(Double num1, Double num2, boolean isDivide) {
         if (num1 == null || num2 == null) {
             throw new IllegalArgumentException("Cannot make calculations with null.");
         }
         if (isDivide && num2 == 0) {
-            throw new ArithmeticException("Cannot divide by 0.");
+            throw new DivisionByZeroException("Cannot divide by 0.");
         }
     }
 
     private String calculate(Double num1, Double num2, String operation) {
-        Double result = 0.0;
         switch (operation) {
             case PLUS:
                 return String.format("%.2f + %.2f = %.2f", num1, num2, num1 + num2);
